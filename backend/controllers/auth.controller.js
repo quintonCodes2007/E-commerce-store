@@ -11,7 +11,7 @@ const generateTokens = (userId) => {
 
 const storeRefreshToken = async (userId, refreshToken) => {
   await redis.set(`refreshToken:${userId}`, refreshToken, "EX", 7 * 24 * 60 * 60); // expires in 7 days
-}
+};
 
 const setCookies = (res, accessToken, refreshToken) => {
   res.cookie("accessToken", accessToken, { 
@@ -28,8 +28,6 @@ const setCookies = (res, accessToken, refreshToken) => {
     maxAge: 7 * 24 * 60 * 1000 // 7 days
   });
 };
-
-
 
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -55,13 +53,37 @@ export const signup = async (req, res) => {
       role: user.role},
       message: "User created successfully",});
   } catch (error) {
+    console.error("Error in signup controller:", error.message);
     res.status(500).json({message: error.message});
   }
-}
+};
 
 export const login = async (req, res) => {
-  res.send("Login route is working");
-}
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (user && (await user.comparePassword(password))) {
+      const { accessToken, refreshToken } = generateTokens(user._id);
+      await storeRefreshToken(user._id, refreshToken);
+
+      setCookies(res, accessToken, refreshToken);
+
+      res.json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        
+      });
+    } else {
+      res.status(401).json({ message: "Invalid email or password" });
+    }
+  } catch (error) {
+    console.error("error in login controller:", error.message);
+    res.status(500).json({ message: error.message })
+  }
+};
 
 export const logout = async (req, res) => {
 
@@ -76,7 +98,7 @@ export const logout = async (req, res) => {
     res.clearCookie("refreshToken");
     res.status(200).json({message: "Logged out successfully"});
   } catch (error) {
-    console.error("Logout error:", error);
+    console.error("error in logout controller:", error.message);
     res.status(500).json({message: "Server error", error:error.message});
   }
-}
+};
