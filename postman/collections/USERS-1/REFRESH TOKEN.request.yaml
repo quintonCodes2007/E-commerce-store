@@ -1,5 +1,6 @@
 $kind: http-request
-url: http://localhost:5000/api/auth/signup
+name: REFRESH TOKEN
+url: http://localhost:5000/api/auth/refresh-token
 method: POST
 body:
   type: json

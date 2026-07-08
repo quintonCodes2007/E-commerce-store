@@ -1,11 +1,11 @@
 $kind: http-request
-url: http://localhost:5000/api/auth/signup
+name: LOGIN
+url: http://localhost:5000/api/auth/login
 method: POST
 body:
   type: json
   content: |-
     {
-        "name": "henry",
         "email": "h@gmail.com",
         "password":"1234567"
     }
