@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import { redis } from "../lib/redis.js"; 
 
 const generateTokens = (userId) => {
   // created two different tokens, one for access and one for refresh
@@ -7,6 +8,28 @@ const generateTokens = (userId) => {
   const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
   return { accessToken, refreshToken };
 };
+
+const storeRefreshToken = async (userId, refreshToken) => {
+  await redis.set(`refreshToken:${userId}`, refreshToken, "EX", 7 * 24 * 60 * 60); // expires in 7 days
+}
+
+const setCookies = (res, accessToken, refreshToken) => {
+  res.cookie("accessToken", accessToken, { 
+    httpOnly: true,//prenvent XSS attacks(cross site scripting attacks)
+    secure: process.env.NODE_ENV === "production", 
+    sameSite:"strict", //prevent CSRF attacks (cross site request forgery attacks)
+    maxAge: 15 * 60 * 1000 // 15 minutes
+  });
+
+  res.cookie("refreshToken", refreshToken, { 
+    httpOnly: true,//prenvent XSS attacks(cross site scripting attacks)
+    secure: process.env.NODE_ENV === "production", 
+    sameSite:"strict", //prevent CSRF attacks (cross site request forgery attacks)
+    maxAge: 7 * 24 * 60 * 1000 // 7 days
+  });
+};
+
+
 
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -21,8 +44,16 @@ export const signup = async (req, res) => {
 
     //authentication token generation logic
     const { accessToken, refreshToken } = generateTokens(user._id);
+    await storeRefreshToken(user._id, refreshToken);
 
-    res.status(201).json({user,message: "User created successfully",});
+    setCookies(res, accessToken, refreshToken);
+
+    res.status(201).json({user:{
+      _id: user._id, 
+      name: user.name, 
+      email: user.email, 
+      role: user.role},
+      message: "User created successfully",});
   } catch (error) {
     res.status(500).json({message: error.message});
   }
@@ -33,5 +64,19 @@ export const login = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-  res.send("Logout route is working");
+
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if(refreshToken) {
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+      await redis.del(`refreshToken:${decoded.userId}`);
+    }
+    
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.status(200).json({message: "Logged out successfully"});
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({message: "Server error", error:error.message});
+  }
 }

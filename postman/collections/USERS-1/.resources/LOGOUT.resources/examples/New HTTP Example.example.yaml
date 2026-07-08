@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: http://localhost:5000/api/auth/logout
+  method: POST
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    - key: x-powered-by
+      value: Express
+    - key: set-cookie
+      value: accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+    - key: set-cookie
+      value: refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+    - key: content-type
+      value: application/json; charset=utf-8
+    - key: content-length
+      value: "37"
+    - key: etag
+      value: W/"25-71uUsMgZY3FdZp9j1h5YMrBIOgg"
+    - key: date
+      value: Wed, 08 Jul 2026 06:14:05 GMT
+    - key: connection
+      value: keep-alive
+    - key: keep-alive
+      value: timeout=5
+  body:
+    type: json
+    content: |-
+      {
+        "message": "Logged out successfully"
+      }
+order: 1783492204734
