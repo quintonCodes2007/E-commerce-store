@@ -1,7 +1,7 @@
 import express from 'express';
-import { protectRoute } from '../middleware/auth.middleware';
-import { getCoupon } from '../controllers/coupon.controller';
-import { validateCoupon } from '../controllers/coupon.controller';
+import { protectRoute } from '../middleware/auth.middleware.js';
+import { getCoupon } from '../controllers/coupon.controller.js';
+import { validateCoupon } from '../controllers/coupon.controller.js';
 
 const router = express.Router();
 
