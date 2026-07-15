@@ -11,11 +11,11 @@ router.post("/checkout-success", protectRoute, async (req,res) => {
         const {sessionId} = req.body;
         const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-        if(session.payment_status === 'paid'){
-            
+        if(session.payment_status === 'paid'){ 
             if(session.metadata.couponCode){
                 await Coupon.findOneAndUpdate({
-                    code:session.metadata.couponCode, userId:session.metadata
+                    code:session.metadata.couponCode, 
+                    userId:session.metadata
                 }, {
                     isActive:false
                 });
@@ -32,12 +32,18 @@ router.post("/checkout-success", protectRoute, async (req,res) => {
                 })),
                 totalAMount: session.total_amount / 100,
                 stripeSessionId: sessionId
-            }),
+            })
 
             await newOrder.save();
+            res.status(200).json({
+                success:true,
+                message: "Payment successful, order created, and coupon deactivated if used.",
+                orderId: newOrder._id
+            });
         }
     } catch (error) {  
-        
+        console.error("Error in checkout success", error);
+        res.status(500).json({message: "Error in checkout success", error: error.message});
     }
 });
 

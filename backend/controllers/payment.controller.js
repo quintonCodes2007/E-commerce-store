@@ -66,7 +66,10 @@ export const createCheckoutSession =  async (req, res) => {
             await createNewCoupon(req.user._id);
         }
         res.status(200).json({id: session.id, totalAmount: totalAmount/100});
-    } catch (error) {}
+    } catch (error) {
+        console.error("Error in createCheckoutSession", error);
+        res.status(500).json({message: "Error in createCheckoutSession", error: error.message});
+    }
 };
 
 async function createStripeCoupon( discountPrecentage) {
