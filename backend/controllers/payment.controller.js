@@ -1,7 +1,6 @@
 import coupon from '../models/coupon.model.js';
 import { stripe } from '../lib/stripe.js';
 
-
 export const createCheckoutSession =  async (req, res) => {
     try {
         const { products, couponCode } = req.body;
@@ -67,21 +66,17 @@ export const createCheckoutSession =  async (req, res) => {
             await createNewCoupon(req.user._id);
         }
         res.status(200).json({id: session.id, totalAmount: totalAmount/100});
-    } catch (error) {
-        
-    }
-}
+    } catch (error) {}
+};
 
 async function createStripeCoupon( discountPrecentage) {
     const coupon = await stripe.coupons.create({
         percent_off: discountPrecentage,
         duration: "once"
-        
       });
 
       return coupon.id;
 }
-
 
 async function createNewCoupon(userId){
     const newCoupon = new coupon({
