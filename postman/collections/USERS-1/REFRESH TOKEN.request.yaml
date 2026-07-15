@@ -1,0 +1,13 @@
+$kind: http-request
+name: REFRESH TOKEN
+url: http://localhost:5000/api/auth/refresh-token
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "name": "henry",
+        "email": "h@gmail.com",
+        "password":"1234567"
+    }
+order: 1756047267548072
