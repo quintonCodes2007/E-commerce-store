@@ -12,7 +12,7 @@ router.post("/create-checkout-session", protectRoute, async (req, res) => {
         const { products, couponCode } = req.body;
 
         if (!Array.isArray(products)|| products.length === 0) {
-            return res.status(400).json({ error: "Invalid or products array" });
+            return res.status(400).json({ error: "Invalid or Empty products array" });
         }
 
         let totalAmount = 0;
