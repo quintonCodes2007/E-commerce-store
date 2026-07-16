@@ -1,0 +1,27 @@
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
+
+import Navbar from "./components/Navbar";
+
+function App() {
+  return (
+    <div className="layout-wrapper">
+      <div className="bg-glow-overlay"/>
+      <div className="relative z-10"/>
+      <div className="relative z-50 pt-20"/>
+
+      <div>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+    </div>
+    </div>
+  );
+}
+
+export default App;
