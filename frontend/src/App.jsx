@@ -9,8 +9,8 @@ function App() {
   return (
     <div className="layout-wrapper">
       <div className="bg-glow-overlay"/>
-      <div className="relative z-10"/>
       <div className="relative z-50 pt-20"/>
+      
 
       <div>
       <Navbar />
