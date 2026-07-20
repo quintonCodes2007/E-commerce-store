@@ -2,7 +2,7 @@ import { ShoppingCart, UserPlus, LogIn, LogOut, Lock, User } from 'lucide-react'
 import  { Link } from 'react-router-dom';
 
 const Navbar = () => {
-    const user = true;
+    const user = false;
     const isAdmin = true;
 
   return (
@@ -21,7 +21,7 @@ const Navbar = () => {
 
       {user && (
         <Link to="/cart" className="cart-link">
-          <ShoppingCart className="cart-icon" size={20} />
+          <ShoppingCart className="cart-icon icon-spacing" size={20} />
 
           <span className="mobile-hidden">Cart</span>
 
