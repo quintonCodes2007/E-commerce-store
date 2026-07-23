@@ -2,7 +2,8 @@ import React from 'react'
 
 const LoginPage = () => {
   return (
-    <div>LoginPage</div>
+                <button type='submit' onClick={() => console.log('BUTTON CLICKED')}
+            >Sign Up</button>
   )
 }
 

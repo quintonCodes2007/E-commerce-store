@@ -8,7 +8,7 @@ import Navbar from "./components/Navbar";
 function App() {
   return (
     <div className="layout-wrapper">
-      <div className="bg-glow-overlay"/>
+      <div className="bg-glow-overlay pointer-events-none"/>
       <div className="relative z-50 pt-20"/>
       
 
