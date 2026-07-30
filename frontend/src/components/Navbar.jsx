@@ -13,7 +13,7 @@ const Navbar = () => {
     <header className="navbar-style">
     <div className="container mx-auto navbar-container">
     <Link to="/" className="logo-link">
-      Absolutely Nothing E-Commerce
+      The Uncanny Collection
     </Link>
 
     <nav className="navbar-nav">
