@@ -1,15 +1,17 @@
 import { ShoppingCart, UserPlus, LogIn, LogOut, Lock, User } from 'lucide-react';
+import { use } from 'react';
 import  { Link } from 'react-router-dom';
+import { useUserStore } from '../stores/useUserStore';
 
 const Navbar = () => {
-    const user = false;
-    const isAdmin = true;
+    const { user, logout } = useUserStore();
+    const isAdmin = user?.role === 'admin';
 
   return (
        
     
     <header className="navbar-style">
-  <div className="container mx-auto navbar-container">
+    <div className="container mx-auto navbar-container">
     <Link to="/" className="logo-link">
       Absolutely Nothing E-Commerce
     </Link>
@@ -39,8 +41,9 @@ const Navbar = () => {
       )}
 
       {user ? (
-        <button className="logout-btn">
+        <button className="logout-btn" onClick={logout}>
           <LogOut className="icon-spacing" size={18} />
+          
           <span className="mobile-hidden">Logout</span>
         </button>
       ) : (
