@@ -20,21 +20,16 @@ export const useUserStore = create((set, get) => ({
             set({ user: res.data.user, loading: false });
         } catch (error) {
             set({ loading: false });
-            return toast.error(error.response.data.message || 'Something went wrong');
+            toast.error(error.response.data.message || 'Something went wrong');
         }
         
     },
 
-    login: async ({name, email, password, confirmPassword}) => {
+    login: async ({email, password}) => {
         set({ loading: true });
 
-        if(password !== confirmPassword) {
-            set({ loading: false });
-            return toast.error('Passwords do not match');
-        }
-
         try {
-            const res = await axiosInstance.post('/auth/signup', { name, email, password });
+            const res = await axiosInstance.post('/auth/login', { email, password });
             set({ user: res.data.user, loading: false });
         } catch (error) {
             set({ loading: false });
