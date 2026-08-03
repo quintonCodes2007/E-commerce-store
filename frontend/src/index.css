@@ -124,7 +124,7 @@
 }
 
 .cart-link:hover {
-    color: rgb(52, 211, 153);
+    color: rgb(224, 37, 37);
 }
 
 @utility cart-icon {
@@ -163,14 +163,14 @@
     padding: 0.25rem 0.75rem;
     border-radius: 0.375rem;
     color: white;
-    background-color: rgb(4, 120, 87);
+    background-color: rgb(150, 5, 5);
     font-weight: 500;
     text-decoration: none;
     transition: background-color 0.3s ease;
 }
 
 .dashboard-btn:hover {
-    background-color: rgb(5, 150, 105);
+    background-color: rgb(210, 6, 6);
 }
 
 /* ===========================
@@ -209,7 +209,7 @@
 }
 
 .auth-btn:hover {
-    background-color: rgb(5, 150, 105);
+    background-color: rgb(150, 5, 5);
 }
 
 /* ===========================

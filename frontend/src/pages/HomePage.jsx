@@ -3,13 +3,14 @@ import { href } from 'react-router-dom';
 import CategoryItem from '../components/CategoryItem';
 
 const categories = [
+    {href: '/organ', name: 'Organs', imageUrl:"/heart.jpeg" },
     {href: '/cursedArtifacts', name: 'Cursed Artifacts', imageUrl:"/weapon2.jpg" },
     {href: '/forbiddenLibrary', name: 'Forbidden Library', imageUrl:"/book3.jpg" },
     {href: '/creepyCollectibles', name: 'Creepy Collectibles', imageUrl:"/doll1.jpg" },
     {href: '/paranormal', name: 'Paranormal', imageUrl:"/book2.jpg" },
     {href: '/witchesApothecary', name: 'Witches Apothecary', imageUrl:"/book1.jpg" },
     {href: '/The "Questionable" Shelf', name: 'The "Questionable" Shelf', imageUrl:"/weapon1.jpg" },
-    {href: '/bags', name: 'Bags', imageUrl:"/bags.jpg" },
+    {href: '/lost&found', name: 'Lost & Found (Definitely Not Stolen)', imageUrl:"/book1.jpg" },
 ];
 
 

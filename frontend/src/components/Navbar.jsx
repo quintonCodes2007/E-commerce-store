@@ -2,6 +2,7 @@ import { ShoppingCart, UserPlus, LogIn, LogOut, Lock, User } from 'lucide-react'
 import { use } from 'react';
 import  { Link } from 'react-router-dom';
 import { useUserStore } from '../stores/useUserStore';
+// import { Router } from 'react-router-dom';
 
 const Navbar = () => {
     const { user, logout } = useUserStore();
@@ -34,7 +35,7 @@ const Navbar = () => {
       )}
 
       {isAdmin && (
-        <Link className="dashboard-btn">
+        <Link className="dashboard-btn" to={"/dashboard"}>
           <Lock className="icon-spacing" size={18} />
           <span className="mobile-hidden">Dashboard</span>
         </Link>
