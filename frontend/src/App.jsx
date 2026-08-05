@@ -20,9 +20,9 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  // if (checkingAuth) { 
-  //   return <LoadingSpinner />;
-  // }
+  if (checkingAuth) { 
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="layout-wrapper">

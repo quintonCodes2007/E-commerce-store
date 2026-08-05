@@ -42,9 +42,9 @@ const AdminPage = () => {
                         </button>
                     ))}
                 </div>
-                    {activeTab === "create" && <createProductForm />}
-                    {activeTab === "products" && <produsctsList />}
-                    {activeTab === "analytics" && <analyticsTab />}
+                    {activeTab === "create" && <CreateProductForm />}
+                    {activeTab === "products" && <ProductsList />}
+                    {activeTab === "analytics" && <AnalyticsTab />}
             </div>
 
         </div>
