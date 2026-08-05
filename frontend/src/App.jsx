@@ -36,7 +36,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={!user ? <SignUpPage /> : <Navigate to="/" />} />
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
-        <Route path="/dashboard" element={<AdminPage />} />
+        <Route path="/dashboard" element={user?.role === 'admin' ? <AdminPage /> : <Navigate to="/login" />} />
       </Routes>
     </div>
     <Toaster/>

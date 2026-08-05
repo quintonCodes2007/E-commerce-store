@@ -1,21 +1,55 @@
 import React from 'react'
+import { PlusCircle, ShoppingBasket, BarChart } from 'lucide-react';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+
+import CreateProductForm from '../components/CreateProductsForm';
+import ProductsList from '../components/ProductsList';
+import AnalyticsTab from '../components/AnalyticsTab';
+
+
+const tabs = [
+    {id: "create", label: "Create Product", icon: PlusCircle},
+    {id: "products", label: "Products", icon: ShoppingBasket},
+    {id: "analytics", label: "Analytics", icon: BarChart},
+];
 
 const AdminPage = () => {
 
+    const [activeTab, setActiveTab] = useState("create");
 
-    <div className="relative min-h-creen text-white overflow-hidden">
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
-            <h1 className="text-center text-5xl font-bold sm:text-6xl text-red-400 mb-4">
-                Browse Our Curiosities while testing the admin dashboard
-            </h1>
-            <p className="text-center text-xl text-gray-400 mb-12">
-                Some artifacts choose their owner. The rest just scream until someone buys them.
-            </p>
+    return (
+        <div className='min-h-screen  text-white relative overflow-hidden'>
+            <div className='relative z-10 container mx-auto px-4 py-16'>
+                <motion.h1
+                    className='text-center text-4xl font-bold text-red-400 mb-8'
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    Admin Dashboard
+                </motion.h1>
 
-
+                <div className='flex justify-center mb-8'>
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex items-center px-4 py-2 mx-2 rounded-md transition-colors duration-200 ${activeTab === tab.id ? 'bg-red-500 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                        >
+                            <tab.icon className='mr-3 h-6 w-6' />
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+                    {activeTab === "create" && <createProductForm />}
+                    {activeTab === "products" && <produsctsList />}
+                    {activeTab === "analytics" && <analyticsTab />}
+            </div>
 
         </div>
-    </div>
+    );
+
 }
 
 export default AdminPage;
