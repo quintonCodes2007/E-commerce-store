@@ -18,7 +18,18 @@ const CreateProductsForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(newProduct);
-    }
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setNewProduct({ ...newProduct, image: reader.result });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
   return (
     <motion.div
@@ -28,8 +39,8 @@ const CreateProductsForm = () => {
         transition={{ duration: 0.8 }}
     >
         <h2 className='text-2xl font-extrabold mb-4  text-red-400 text-center'>Create a new product</h2>
-
-        <form onSubmit={handleSubmit}>
+ 
+        <form className='space-y-4' onSubmit={handleSubmit}>
             <div>
                 {/* <label htmlFor="name" className='block text-sm font-medium text-gray-300'>Product Name</label> */}
                 <input
@@ -38,12 +49,11 @@ const CreateProductsForm = () => {
                     name='name'
                     value={newProduct.name}
                     onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none mb-3'
+                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
                     required placeholder='Product name'
                 />
             </div>
-
-            
+        
             <div>
                 {/* <label htmlFor="name" className='block text-sm font-medium text-gray-300'>Product Name</label> */}
                 <textarea
@@ -51,7 +61,7 @@ const CreateProductsForm = () => {
                     name='description'
                     value={newProduct.description}
                     onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none mb-3'
+                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
                     required placeholder='Product description'
                 />
             </div>
@@ -65,7 +75,7 @@ const CreateProductsForm = () => {
                     value={newProduct.price}
                     onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                     step='0.01'
-                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none mb-3'
+                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
                     required placeholder='Product price'
                 />
             </div>
@@ -77,7 +87,7 @@ const CreateProductsForm = () => {
                     name='category'
                     value={newProduct.category}
                     onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none mb-3'
+                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
                     required
                 >
                 <option className="bg-gray-800 text-red-400" value=''>Select a category</option>
@@ -90,13 +100,21 @@ const CreateProductsForm = () => {
             </div>
 
             <div className='mt-1 flex items-center'>
-                <input type="file" id='image' className='sr-only' accept='image/*' />
+                <input type="file" id='image' className='sr-only' accept='image/*'
+                onChange={handleImageChange}
+                />
                 <label htmlFor="image" className='cursor-pointer  py-2 block mb-3 w-full text-center border border-red-400 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-300 hover:bg-red-800/30 focus:outline-none focus:ring-1 focus:ring-offset  focus:ring-red-500'
                 >
-                    <Upload className='h-5 w-5 inline-block mr-2' />
-                    Upload an image
+                    {newProduct.image ? (
+                        "Change image"
+                    ) : (
+                        <>
+                            <Upload className="h-5 w-5 inline-block mr-2" />
+                            Upload an image
+                        </>
+                    )}
                 </label>
-                {newProduct.image && <span className='ml-3 text-sm text-gray-400'>{newProduct.image}</span>}
+
             </div>
 
             <button 
