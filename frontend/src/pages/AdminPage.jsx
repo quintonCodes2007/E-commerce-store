@@ -2,10 +2,12 @@ import React from 'react'
 import { PlusCircle, ShoppingBasket, BarChart } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 
 import CreateProductForm from '../components/CreateProductsForm';
 import ProductsList from '../components/ProductsList';
 import AnalyticsTab from '../components/AnalyticsTab';
+import { useProductStore } from '../stores/useProductStore';
 
 
 const tabs = [
@@ -17,6 +19,11 @@ const tabs = [
 const AdminPage = () => {
 
     const [activeTab, setActiveTab] = useState("create");
+    const { fetchAllProducts } = useProductStore();
+
+    useEffect(() => {
+        fetchAllProducts();
+    }, [fetchAllProducts]);
 
     return (
         <div className='min-h-screen  text-white relative overflow-hidden'>

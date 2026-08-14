@@ -44,7 +44,7 @@ const CreateProductsForm = () => {
   return (
     <motion.div
         className='bg-red-300/10 shadow-lg rounded-lg p-8 max-w-xl mx-auto'
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
     >
