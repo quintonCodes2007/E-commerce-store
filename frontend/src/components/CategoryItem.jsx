@@ -5,7 +5,7 @@ const CategoryItem = ({category}) => {
      if (!category) return null;
   return (
     <div className="relative overflow-hidden h-96 w-full rounded-lg group">
-        <Link to={"/category" + category.href}>
+        <Link to={`/category/${encodeURIComponent(category.name)}`}>
             <div className='w-full h-full cursor-pointer'>
                 <div className='absolute inset-0 bg-linear-to-r from-transparent to-gray-900/50 z-10'/>
                 <img
