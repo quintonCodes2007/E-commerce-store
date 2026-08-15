@@ -16,6 +16,9 @@ const ProductCard = ({  product }) => {
 
         <div className='mt-4 px-5 pb-5'>
             <h5 className='text-xl font-semibold tracking-tight text-red-300'>{product.name}</h5>
+
+            <h5 className='text-xl font-semibold tracking-tight text-red-300'>{product.description}</h5>
+
             <div className='mt-2 mb-5 flex items-center justify-between'>
                 <p>
                     <span className='text-3xl font-bold text-red-500'>${product.price.toFixed(2)}</span>
