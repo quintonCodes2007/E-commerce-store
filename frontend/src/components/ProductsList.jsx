@@ -43,7 +43,7 @@ const ProductsList = () => {
                   <div className='flex-0 h-10 w-10'>
                     <img 
                       className='h-10 w-10 rounded-full object-cover' 
-                      src={product.image} 
+                      src={product.image}
                       alt={product.name} 
                     />
                   </div>
