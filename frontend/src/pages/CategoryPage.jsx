@@ -40,11 +40,14 @@ const CategoryPage = () => {
                         No products found in this category.
                     </h2>    
                     )}
+
+                    {products?.map((product) => (
+                        <ProductCard key={product._id} product={product} />
+                    ))}
+
                 </motion.div>
 
-                {products?.map((product) => (
-                    <ProductCard key={product._id} product={product} />
-                ))}
+                
 
             </div>
         </div> 
