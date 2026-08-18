@@ -13,7 +13,7 @@ const ProductsList = () => {
 
   return (
     <motion.div 
-      className='bg-red-300/10 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto'
+      className='bg-red-300/10 shadow-lg rounded-lg overflow-hidden max-w-7xl mx-auto'
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
@@ -26,8 +26,9 @@ const ProductsList = () => {
 
             <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'>Price</th>
 
-            <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'>Category</th>
+            <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'>Inventory Quantity</th>
 
+            <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'>Category</th>
 
             <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'>Featured</th>
 
@@ -38,6 +39,7 @@ const ProductsList = () => {
         <tbody className='bg-red-300/10 divide-y divide-gray-200'>
           {products?.map((product) => (
             <tr key={product.id} className='hover:bg-red-700/10'>
+
               <td className='px-6 py-4 whitespace-nowrap'>
                 <div className='flex items-center'>
                   <div className='flex-0 h-10 w-10'>
@@ -52,9 +54,15 @@ const ProductsList = () => {
                   </div>
                 </div>
               </td>
+
               <td className='px-6 py-4 whitespace-nowrap'>
                 <div className='text-sm text-gray-300'>${product.price.toFixed(2)}</div>
               </td>
+
+              <td className='px-6 py-4 whitespace-nowrap'>
+                <div className='text-sm text-gray-300'>27 items</div>
+              </td>
+
               <td className='px-6 py-4 whitespace-nowrap'>
                 <div className='text-sm text-gray-300'>{product.category}</div>
               </td>
@@ -69,6 +77,7 @@ const ProductsList = () => {
                   <Star className='h-5 w-5'/>
                 </button>
               </td>
+
               <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
                 <button
                   onClick={() => deleteProduct(product._id)}
@@ -77,6 +86,7 @@ const ProductsList = () => {
                   <Trash className='h-5 w-5'/>
                 </button>
               </td>
+
             </tr>
           ))}
         </tbody>
