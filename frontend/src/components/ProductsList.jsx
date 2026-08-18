@@ -19,10 +19,10 @@ const ProductsList = () => {
       transition={{ duration: 0.8 }}
     >
 
-      <table className='min-w-full divide-y divide-red-500'>
+      <table className='min-w-full divide-y divide-red-500 table-fixed'>
         <thead className='bg-gray-800'>
           <tr>
-            <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'>Product</th> 
+            <th scope="col" className='px-9 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'>Product</th> 
 
             <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'>Price</th>
 
