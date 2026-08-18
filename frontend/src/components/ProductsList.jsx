@@ -60,7 +60,7 @@ const ProductsList = () => {
               </td>
 
               <td className='px-6 py-4 whitespace-nowrap'>
-                <div className='text-sm text-gray-300'>27 items</div>
+                <div className='text-sm text-gray-300'>{product.inventoryQuantity} items</div>
               </td>
 
               <td className='px-6 py-4 whitespace-nowrap'>

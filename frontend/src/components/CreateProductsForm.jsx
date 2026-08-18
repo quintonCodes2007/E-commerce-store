@@ -113,7 +113,7 @@ const CreateProductsForm = () => {
                     name='category'
                     value={newProduct.category}
                     onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                    className='mt-1  border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
+                    className='mt-1 text-gray-400 border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
                     required
                 >
                 <option className="bg-gray-800 text-red-400" value=''>Select a category</option>
@@ -124,16 +124,13 @@ const CreateProductsForm = () => {
                 ))}
                 </select>
 
-
-
-
             </div>
 
             <div className='mt-1 flex items-center'>
                 <input type="file" id='image' className='sr-only' accept='image/*'
                 onChange={handleImageChange}
                 />
-                <label htmlFor="image" className='cursor-pointer  py-2 block mb-3 w-full text-center border border-red-400 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-300 hover:bg-red-800/30 focus:outline-none focus:ring-1 focus:ring-offset  focus:ring-red-500'
+                <label htmlFor="image" className='cursor-pointer  py-2 block mb-3 w-full text-center border border-red-400/40 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-400 hover:bg-red-800/30 focus:outline-none focus:ring-1 focus:ring-offset  focus:ring-red-500'
                 >
                     {newProduct.image ? (
                         "Change image"
