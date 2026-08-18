@@ -13,6 +13,7 @@ const CreateProductsForm = () => {
         name: '',
         description: '',
         price: '',
+        inventoryQuantity: '',
         category: '',
         image: '',
     });
@@ -23,7 +24,7 @@ const CreateProductsForm = () => {
         e.preventDefault();
     try {
          await createProduct(newProduct);
-         setNewProduct({name: '',description: '', price: '', category: '', image: ''});
+         setNewProduct({name: '', description: '', price: '', inventoryQuantity: '', category: '', image: ''});
     } catch (error) {
         console.error('Error creating product:', error);
     }
@@ -90,14 +91,29 @@ const CreateProductsForm = () => {
                 />
             </div>
 
-            <div>
+                <div className="grid grid-cols-2 gap-2">
+
+                    <input
+                    id='inventoryQuantity'
+                    type='number'
+                    name='inventoryQuantity'
+                    value={newProduct.inventoryQuantity}
+                    onChange={(e) => setNewProduct({ ...newProduct, inventoryQuantity: e.target.value })}
+                    step='1'
+                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
+                    required placeholder='Inventory Quantity'
+                
+                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
+                    required placeholder='Number of items in stock'
+                />
+
                 {/* <label htmlFor="name" className='block text-sm font-medium text-gray-300'>Product Category</label> */}
                 <select
                     id='category'
                     name='category'
                     value={newProduct.category}
                     onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                    className='mt-1 block w-full border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
+                    className='mt-1  border border-red-400/40 rounded-md  shadow-sm py-2 px-3 focus:border-red-400 focus:ring-1 focus:ring-red-500 focus:outline-none'
                     required
                 >
                 <option className="bg-gray-800 text-red-400" value=''>Select a category</option>
@@ -107,6 +123,10 @@ const CreateProductsForm = () => {
                     </option>
                 ))}
                 </select>
+
+
+
+
             </div>
 
             <div className='mt-1 flex items-center'>
