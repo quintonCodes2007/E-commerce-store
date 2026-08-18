@@ -41,7 +41,7 @@ export const getFeaturedProducts = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, price, image, category} = req.body;
+        const { name, description, price, inventoryQuantity, image, category} = req.body;
         let cloudinaryResponse = null;
 
         if(image) {
@@ -52,6 +52,7 @@ export const createProduct = async (req, res) => {
             name,
             description,
             price,
+            inventoryQuantity,
             image: cloudinaryResponse?.secure_url ?  cloudinaryResponse.secure_url : "",
             category
         });
