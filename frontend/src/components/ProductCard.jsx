@@ -4,14 +4,14 @@ import { useUserStore } from '../stores/useUserStore.js';
 
 const ProductCard = ({ product }) => {
     const { user } = useUserStore();
-
+    const { addToCart } = useCartStore();
     const handleAddToCart = () => {
 
         if(!user) {
             toast.success(`Please login to add to cart`, {id:"login"});
             return
         } else{
-            
+            addToCart(product);
         }
     }
 

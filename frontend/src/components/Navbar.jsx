@@ -2,11 +2,13 @@ import { ShoppingCart, UserPlus, LogIn, LogOut, Lock, User } from 'lucide-react'
 import { use } from 'react';
 import  { Link } from 'react-router-dom';
 import { useUserStore } from '../stores/useUserStore';
+import { useCartStore } from '../stores/useCartStore';
 // import { Router } from 'react-router-dom';
 
 const Navbar = () => {
     const { user, logout } = useUserStore();
     const isAdmin = user?.role === 'admin';
+    const { cartItems } = useCartStore();
 
   return (
        
@@ -29,7 +31,7 @@ const Navbar = () => {
           <span className="mobile-hidden">Cart</span>
 
           <span className="cart-badge">
-            10
+            {user.cartItems?.length || 0}
           </span>
         </Link>
       )}
