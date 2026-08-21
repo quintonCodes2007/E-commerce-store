@@ -31,7 +31,7 @@ const Navbar = () => {
           <span className="mobile-hidden">Cart</span>
 
           <span className="cart-badge">
-            {user.cartItems?.length || 0}
+            {cartItems?.length || 0}
           </span>
         </Link>
       )}
