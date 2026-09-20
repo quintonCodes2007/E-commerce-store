@@ -56,19 +56,24 @@ export const useCartStore = create((set, get) => ({
   },
 
 
-  removeFromCart: async (product) => {
+removeFromCart: async (productId) => {
     try {
-      const response = await axios.post('/cart', { productId: product._id });
-      if (response.status === 200) {
-        toast.success('Item removed from cart');
-        set({cartItems: response.data.cartItems});
-      } else {
-        toast.error('Error removing item from cart');
-      }
+        const response = await axios.delete('/cart', {
+            data: { productId }
+        });
+
+        if (response.status === 200) {
+            toast.success('Item removed from cart');
+            set({ cartItems: response.data });
+            get().calculateTotal();
+        }
     } catch (error) {
-      toast.error('Error removing item from cart');
+        console.error("Error removing item from cart:", error);
+        toast.error(error.response?.data?.message || 'Error removing item from cart');
     }
-  },
+},
+
+
   clearCart: async () => {
     try {
       const response = await axios.post('/api/cart/clear');

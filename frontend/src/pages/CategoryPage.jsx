@@ -19,7 +19,7 @@ const CategoryPage = () => {
 
     return (
         <div className='min-h-screen'>
-            <div className='relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
+            <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
                 <motion.div
                     className='text-center text-4xl sm:text-5xl font-bold mb-8 text-red-600'
                     initial={{ opacity: 0, y: -20 }}

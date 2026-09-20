@@ -1,40 +1,60 @@
 import Product from '../models/product.model.js'
-
 export const getCartProducts = async (req, res) => {
+    
     try {
-        const products = await Product.find({_id:{$in:req.user.cartItems}});
-        
+        const products = await Product.find({
+            _id: { $in: req.user.cartItems.map(item => item.product) }
+        });
+
         const cartItems = products.map((product) => {
-            const item = req.user.cartItems.find(cartItem => cartItem.id === product._id);
-            return {...product.json(), quantity: item.quantity};
+            const item = req.user.cartItems.find(
+                cartItem => cartItem.product.toString() === product._id.toString()
+            );
+
+            return {
+                ...product.toJSON(),
+                quantity: item.quantity
+            };
         });
 
         res.json(cartItems);
     } catch (error) {
         console.error("Error in getCartProducts controller:", error.message);
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({
+            message: "Server error",
+            error: error.message
+        });
     }
-}
+};
 
 export const addToCart = async (req, res) => {
     try {
-        const { productId, quantity } = req.body;
-        const user = req.user; // Assuming user is attached to the request object after authentication
+        const { productId } = req.body;
+        const user = req.user;
 
-        // Check if the product already exists in the user's cart
-        const existingItem = user.cartItems.find(item => item.id === productId);
+        const existingItem = user.cartItems.find(
+            item => item.product.toString() === productId.toString()
+        );
+
         if (existingItem) {
-            existingItem.quantity += 1; // Update the quantity if it exists
+            existingItem.quantity += 1;
         } else {
-            user.cartItems.push(productId); 
+            user.cartItems.push({
+                product: productId,
+                quantity: 1
+            });
         }
 
-        await user.save(); // Save the updated user document
-        res.json(user.cartItems); 
+        await user.save();
+
+        res.json(user.cartItems);
 
     } catch (error) {
         console.error("Error in addToCart controller:", error.message);
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({
+            message: "Server error",
+            error: error.message
+        });
     }
 };
 
