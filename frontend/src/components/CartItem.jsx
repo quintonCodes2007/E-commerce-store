@@ -30,7 +30,7 @@ const CartItem = ({ item }) => {
                     </button>
                 </div>
                 <div className='text-end md:order-4 md:w-32'>
-                    <p className='text-base font-bold text-red-400'>${item.price}</p>         
+                    <p className='text-base font-bold text-red-400'>${(item.price * item.quantity).toFixed(2)}</p>
                 </div>
             </div>
 
