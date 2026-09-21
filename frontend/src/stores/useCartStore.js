@@ -64,7 +64,9 @@ removeFromCart: async (productId) => {
 
         if (response.status === 200) {
             toast.success('Item removed from cart');
-            set({ cartItems: response.data });
+            set(prevState => ({
+                cartItems: prevState.cartItems.filter(item => item._id !== productId)
+            }));
             get().calculateTotal();
         }
     } catch (error) {
@@ -73,6 +75,22 @@ removeFromCart: async (productId) => {
     }
 },
 
+updateQuantity: async (productId, quantity) => {
+  if (quantity === 0) {
+    await get().removeFromCart(productId);
+    return
+  } else {
+    try {
+      const response = await axios.put('/cart', { productId, quantity });
+      set(prevState => ({
+        cartItems: prevState.cartItems.map(item => item._id === productId ? { ...item, quantity } : item)
+      }));
+      get().calculateTotal();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Error updating item quantity');
+    }
+  }
+},
 
   clearCart: async () => {
     try {
