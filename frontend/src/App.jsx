@@ -14,6 +14,7 @@ import { useCartStore } from "./stores/useCartStore";
 
 import Navbar from "./components/Navbar";
 import LoadingSpinner from "./components/LoadingSpinner";
+import { get } from "mongoose";
 
 
 function App() {
@@ -25,10 +26,9 @@ useEffect(() => {
 }, [checkAuth]);
 
 useEffect(() => {
-  if (user) {
-    getCartItems();
-  }
-}, [user, getCartItems]);
+  if (!user) return;
+     getCartItems();
+    }, [getCartItems]);
 
   if (checkingAuth) { 
     return <LoadingSpinner />;
