@@ -54,7 +54,7 @@ const PurchaseSuccessPage = () => {
                 </div>
 
                 <div className="space-y-4">
-                    <button className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 flex items-center justify-center" >
+                    <button className="w-full bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition duration-300 flex items-center justify-center" >
                         <HandHeart className="mr-2" size={18} />
                         We appreciate your loss!   
                     </button>
