@@ -15,6 +15,7 @@ import { useCartStore } from "./stores/useCartStore";
 
 import Navbar from "./components/Navbar";
 import LoadingSpinner from "./components/LoadingSpinner";
+import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
 
 
 
@@ -55,6 +56,7 @@ useEffect(() => {
         <Route path="/dashboard" element={user?.role === 'admin' ? <AdminPage /> : <Navigate to="/login" />} />
         <Route path="/category/:category" element= {<CategoryPage />}  />
         <Route path="/cart" element= {user ? <CartPage />: <Navigate to='/login'/>} />
+        <Route path="/purchase-success" element= {user ? <PurchaseSuccessPage />: <Navigate to='/login'/>} />
       </Routes>
     </div>
     <Toaster/>

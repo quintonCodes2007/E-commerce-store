@@ -4,6 +4,7 @@ import { ArrowLeft, Check, CheckCircle2, CreditCard, LoaderCircle, LockKeyhole }
 import { useCartStore } from '../stores/useCartStore';
 import { useUserStore } from '../stores/useUserStore';
 import './checkout.css';
+import { Navigate } from 'react-router-dom';
 
 const money = (amount) => `$${Number(amount).toFixed(2)}`;
 
@@ -32,20 +33,7 @@ export default function CheckoutPage() {
   };
 
   if (status === 'success') {
-    return (
-      <main className='demo-checkout checkout-result'>
-        <div className='result-card'>
-          <span className='demo-badge'>DEMO MODE</span>
-          <CheckCircle2 className='success-icon' size={64} aria-hidden='true' />
-          <h1>Demo payment successful</h1>
-          <p>Your payment of <strong>{money(receipt.amount)}</strong> for {receipt.quantity} {receipt.quantity === 1 ? 'item' : 'items'} was simulated.</p>
-          <div className='demo-notice'>No money was charged and no real order was placed. Your cart is still available.</div>
-          <p className='receipt-reference'>Reference: {receipt.reference}</p>
-          <Link className='checkout-pay' to='/'>Continue shopping</Link>
-          <Link className='checkout-back result-back' to='/cart'><ArrowLeft size={16} /> Back to cart</Link>
-        </div>
-      </main>
-    );
+    return <Navigate to="/purchase-success" />
   }
 
   if (cartItems.length === 0) {
