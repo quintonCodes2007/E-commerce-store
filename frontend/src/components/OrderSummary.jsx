@@ -1,12 +1,11 @@
 import {motion} from 'framer-motion';
-import { Move } from 'lucide-react';
-import { use } from 'react';
 import { useCartStore } from '../stores/useCartStore';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MoveRight } from 'lucide-react';
 
 
 const OrderSummary = () => {
+    const navigate = useNavigate();
 
     const {total, subtotal, coupon, isCouponApplied} = useCartStore();
 
@@ -56,6 +55,7 @@ const OrderSummary = () => {
                 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/checkout')}
                 >
                     Checkout
                 </motion.button>

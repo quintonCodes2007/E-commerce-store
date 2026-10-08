@@ -12,6 +12,7 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       react.configs.flat.recommended,
+      react.configs.flat['jsx-runtime'],
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
@@ -20,6 +21,9 @@ export default defineConfig([
       parserOptions: {
         ecmaFeatures: { jsx: true },
       },
+    },
+    settings: {
+      react: { version: '19.2' },
     },
     rules: {
       'react/prop-types': 'off',

@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from "react";
 
@@ -8,6 +8,7 @@ import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import CategoryPage from "./pages/CategoryPage";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 import { useUserStore } from "./stores/useUserStore";
 import { useCartStore } from "./stores/useCartStore";
@@ -18,6 +19,7 @@ import LoadingSpinner from "./components/LoadingSpinner";
 
 
 function App() {
+  const { pathname } = useLocation();
   const { user, checkAuth, checkingAuth } = useUserStore();
   const { getCartItems } = useCartStore();
 
@@ -28,10 +30,14 @@ useEffect(() => {
 useEffect(() => {
   if (!user) return;
       getCartItems();
-    }, [getCartItems]);
+    }, [getCartItems, user]);
 
   if (checkingAuth) { 
     return <LoadingSpinner />;
+  }
+
+  if (pathname === '/checkout') {
+    return user ? <CheckoutPage /> : <Navigate to='/login' replace />;
   }
 
   return (
