@@ -2,8 +2,17 @@ import { CheckCircle, HandHeart, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import Confetti from 'react-confetti';
+import { useEffect } from 'react';
+import { useCartStore } from '../stores/useCartStore';
 
 const PurchaseSuccessPage = () => {
+
+    const clearCart = useCartStore((state) => state.clearCart);
+
+    useEffect(() => {
+        clearCart();
+    }, [clearCart]);
+
   return (
         <motion.div
     initial={{ opacity: 0, y: 20 }}
