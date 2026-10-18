@@ -14,6 +14,10 @@ const OrderSummary = () => {
     const formattedTotal = total?.toFixed(2);
     const formattedSavings = savings?.toFixed(2);
 
+    const handlePayment = async () => {
+        const res = await axios.post('/payments/checkout-session', { products: cart, couponCode: coupon ? coupon?.code : null, });
+    };
+
   return (
     <motion.div
     className='space-y-4 rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-sm sm:p-6'
