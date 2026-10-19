@@ -1,36 +1,70 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check, CheckCircle2, CreditCard, LoaderCircle, LockKeyhole } from 'lucide-react';
+import { ArrowLeft, Check, CreditCard, LoaderCircle, LockKeyhole } from 'lucide-react';
 import { useCartStore } from '../stores/useCartStore';
 import { useUserStore } from '../stores/useUserStore';
 import './checkout.css';
 import { Navigate } from 'react-router-dom';
+import axios from "../lib/axios";
+
 
 const money = (amount) => `$${Number(amount).toFixed(2)}`;
 
 export default function CheckoutPage() {
-  const { cartItems, subtotal, total } = useCartStore();
+  const {
+  cartItems,
+  subtotal,
+  total,
+  coupon,
+  isCouponApplied
+} = useCartStore();
   const { user } = useUserStore();
   const [status, setStatus] = useState('ready');
-  const [receipt, setReceipt] = useState(null);
-  const timer = useRef(null);
+
   const submitting = useRef(false);
+  const demoReference = useRef(`DEMO-${crypto.randomUUID()}`);
   const quantity = cartItems.reduce((count, item) => count + item.quantity, 0);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
 
-  const simulatePayment = (event) => {
-    event.preventDefault();
-    if (submitting.current || cartItems.length === 0) return;
-    submitting.current = true;
-    setStatus('processing');
-    // Only a local UI simulation: no card collection, payment API, or order write.
-    const demoReceipt = { amount: total, quantity, reference: `DEMO-${crypto.randomUUID().slice(0, 8).toUpperCase()}` };
-    timer.current = setTimeout(() => {
-      setReceipt(demoReceipt);
-      setStatus('success');
-    }, 1400);
-  };
+
+  
+const simulatePayment = async (event) => {
+  event.preventDefault();
+
+  if (submitting.current || cartItems.length === 0) return;
+
+  submitting.current = true;
+  setStatus("processing");
+
+
+
+  try {
+     await axios.post(
+      "/payments/demo-checkout",
+      {
+        products: cartItems.map((item) => ({
+          _id: item._id,
+          quantity: item.quantity,
+        })),
+        couponCode: isCouponApplied ? coupon?.code : null,
+        demoReference: demoReference.current,
+      }
+    );
+
+
+    setStatus("success");
+  } catch (error) {
+    console.error("Demo checkout failed:", error);
+    setStatus("ready");
+    submitting.current = false;
+
+    alert(
+      error.response?.data?.message ||
+        "Demo checkout failed. Please try again."
+    );
+  }
+};
+
 
   if (status === 'success') {
     return <Navigate to="/purchase-success" />
