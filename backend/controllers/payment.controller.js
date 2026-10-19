@@ -1,143 +1,199 @@
+
+import crypto from "node:crypto";
+import mongoose from "mongoose";
 import Coupon from "../models/coupon.model.js";
 import Order from "../models/order.model.js";
-import { stripe } from "../lib/stripe.js";
+import Product from "../models/product.model.js";
 
-export const createCheckoutSession = async (req, res) => {
-	try {
-		const { products, couponCode } = req.body;
+export const demoCheckout = async (req, res) => {
+  try {
+    const { products, couponCode, demoReference } = req.body;
+    const userId = req.user._id;
 
-		if (!Array.isArray(products) || products.length === 0) {
-			return res.status(400).json({ error: "Invalid or empty products array" });
-		}
+    if (
+      typeof demoReference !== "string" ||
+      !/^DEMO-[A-Za-z0-9-]{8,80}$/.test(demoReference)
+    ) {
+      return res.status(400).json({
+        message: "Invalid demo reference",
+      });
+    }
 
-		let totalAmount = 0;
+    // Prevent retrying the same checkout twice.
+    const existingOrder = await Order.findOne({
+      demoReference,
+      user: userId,
+    });
 
-		const lineItems = products.map((product) => {
-			const amount = Math.round(product.price * 100); // stripe wants u to send in the format of cents
-			totalAmount += amount * product.quantity;
+    if (existingOrder) {
+      return res.status(200).json({
+        success: true,
+        orderId: existingOrder._id,
+        totalAmount: existingOrder.totalAmount,
+        demoReference,
+      });
+    }
 
-			return {
-				price_data: {
-					currency: "usd",
-					product_data: {
-						name: product.name,
-						images: [product.image],
-					},
-					unit_amount: amount,
-				},
-				quantity: product.quantity || 1,
-			};
-		});
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({
+        message: "Your cart is empty",
+      });
+    }
 
-		let coupon = null;
-		if (couponCode) {
-			coupon = await Coupon.findOne({ code: couponCode, userId: req.user._id, isActive: true });
-			if (coupon) {
-				totalAmount -= Math.round((totalAmount * coupon.discountPercentage) / 100);
-			}
-		}
+    const ids = products.map((item) => item._id);
 
-		const session = await stripe.checkout.sessions.create({
-			payment_method_types: ["card"],
-			line_items: lineItems,
-			mode: "payment",
-			success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
-			cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
-			discounts: coupon
-				? [
-						{
-							coupon: await createStripeCoupon(coupon.discountPercentage),
-						},
-				  ]
-				: [],
-			metadata: {
-				userId: req.user._id.toString(),
-				couponCode: couponCode || "",
-				products: JSON.stringify(
-					products.map((p) => ({
-						id: p._id,
-						quantity: p.quantity,
-						price: p.price,
-					}))
-				),
-			},
-		});
+    if (
+      new Set(ids).size !== ids.length ||
+      !ids.every((id) => mongoose.isValidObjectId(id)) ||
+      !products.every(
+        (item) =>
+          Number.isSafeInteger(item.quantity) &&
+          item.quantity > 0 &&
+          item.quantity <= 100
+      )
+    ) {
+      return res.status(400).json({
+        message: "Invalid cart items",
+      });
+    }
 
-		if (totalAmount >= 20000) {
-			await createNewCoupon(req.user._id);
-		}
-		res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
-	} catch (error) {
-		console.error("Error processing checkout:", error);
-		res.status(500).json({ message: "Error processing checkout", error: error.message });
-	}
-};
+    // Always use database prices, never frontend prices.
+    const dbProducts = await Product.find({
+      _id: { $in: ids },
+    });
 
-export const checkoutSuccess = async (req, res) => {
-	try {
-		const { sessionId } = req.body;
-		const session = await stripe.checkout.sessions.retrieve(sessionId);
+    if (dbProducts.length !== ids.length) {
+      return res.status(400).json({
+        message: "Some products are unavailable",
+      });
+    }
 
-		if (session.payment_status === "paid") {
-			if (session.metadata.couponCode) {
-				await Coupon.findOneAndUpdate(
-					{
-						code: session.metadata.couponCode,
-						userId: session.metadata.userId,
-					},
-					{
-						isActive: false,
-					}
-				);
-			}
+    const productMap = new Map(
+      dbProducts.map((product) => [
+        product._id.toString(),
+        product,
+      ])
+    );
 
-			// create a new Order
-			const products = JSON.parse(session.metadata.products);
-			const newOrder = new Order({
-				user: session.metadata.userId,
-				products: products.map((product) => ({
-					product: product.id,
-					quantity: product.quantity,
-					price: product.price,
-				})),
-				totalAmount: session.amount_total / 100, // convert from cents to dollars,
-				stripeSessionId: sessionId,
-			});
+    let subtotalCents = 0;
+    const orderProducts = [];
 
-			await newOrder.save();
+    for (const item of products) {
+      const product = productMap.get(item._id);
 
-			res.status(200).json({
-				success: true,
-				message: "Payment successful, order created, and coupon deactivated if used.",
-				orderId: newOrder._id,
-			});
-		}
-	} catch (error) {
-		console.error("Error processing successful checkout:", error);
-		res.status(500).json({ message: "Error processing successful checkout", error: error.message });
-	}
-};
+      if (
+        !product ||
+        !Number.isFinite(product.price) ||
+        product.price < 0
+      ) {
+        return res.status(400).json({
+          message: "Invalid product price",
+        });
+      }
 
-async function createStripeCoupon(discountPercentage) {
-	const coupon = await stripe.coupons.create({
-		percent_off: discountPercentage,
-		duration: "once",
-	});
+      const priceCents = Math.round(product.price * 100);
 
-	return coupon.id;
-}
+      subtotalCents += priceCents * item.quantity;
 
-async function createNewCoupon(userId) {
-	await Coupon.findOneAndDelete({ userId });
+      orderProducts.push({
+        product: product._id,
+        quantity: item.quantity,
+        price: priceCents / 100,
+      });
+    }
 
-	const newCoupon = new Coupon({
-		code: "GIFT" + Math.random().toString(36).substring(2, 8).toUpperCase(),
-		discountPercentage: 10,
-		expirationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-		userId: userId,
-	});
+    let discountPercentage = 0;
+    let appliedCoupon = null;
 
-	await newCoupon.save();
+    if (couponCode) {
+      appliedCoupon = await Coupon.findOne({
+        code: couponCode,
+        userId,
+        isActive: true,
+        expirationDate: { $gt: new Date() },
+      });
 
-	return newCoupon;
+      if (!appliedCoupon) {
+        return res.status(400).json({
+          message: "Invalid or expired coupon",
+        });
+      }
+
+      discountPercentage = appliedCoupon.discountPercentage;
+    }
+
+    const discountCents = Math.round(
+      (subtotalCents * discountPercentage) / 100
+    );
+
+    const totalCents = subtotalCents - discountCents;
+    const totalAmount = totalCents / 100;
+
+    // This records a simulation, not a verified payment.
+    const order = await Order.create({
+      user: userId,
+      products: orderProducts,
+      totalAmount,
+      paymentMethod: "demo",
+      paymentStatus: "simulated",
+      demoReference,
+    });
+
+    if (appliedCoupon) {
+      await Coupon.updateOne(
+        { _id: appliedCoupon._id },
+        { $set: { isActive: false } }
+      );
+    }
+
+    // Reward demo orders worth $200 or more.
+    let newCoupon = null;
+
+    if (totalCents >= 20000) {
+      const code =
+        "GIFT" + crypto.randomBytes(4).toString("hex").toUpperCase();
+
+      newCoupon = await Coupon.findOneAndUpdate(
+        { userId },
+        {
+          $set: {
+            code,
+            discountPercentage: 10,
+            isActive: true,
+            expirationDate: new Date(
+              Date.now() + 30 * 24 * 60 * 60 * 1000
+            ),
+          },
+        },
+        { upsert: true, new: true, runValidators: true }
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Demo checkout completed",
+      orderId: order._id,
+      demoReference,
+      totalAmount,
+      newCoupon: newCoupon?.code ?? null,
+    });
+  } catch (error) {
+    console.error("CHECKOUT ERROR:", {
+    code: error.code,
+    keyPattern: error.keyPattern,
+    keyValue: error.keyValue,
+    message: error.message,
+});
+    if (error.code === 11000) {
+      return res.status(409).json({
+        message: "Duplicate checkout reference. Check order history.",
+      });
+    }
+
+    console.error("Demo checkout error:", error);
+
+    return res.status(500).json({
+      message: "Demo checkout failed",
+    });
+  }
 };

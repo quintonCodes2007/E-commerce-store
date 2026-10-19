@@ -65,6 +65,7 @@ export const useCartStore = create((set, get) => ({
     },
 
 
+
 calculateTotal: () => {
   const { cartItems, coupon, isCouponApplied } = get();
 
@@ -84,6 +85,7 @@ calculateTotal: () => {
 
   set({ subtotal, total });
 },
+
 
 
 

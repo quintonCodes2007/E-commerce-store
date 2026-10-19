@@ -1,10 +1,12 @@
 import User from '../models/user.model.js';
+import Order from '../models/order.model.js';
+import Product from '../models/product.model.js';
 
 export const getAnalyticsData = async () => {
     const totalUsers = await User.countDocuments();
-    const totalProducts = await User.countDocuments();
+    const totalProducts = await Product.countDocuments();
 
-    const salesData = await User.aggregate([
+    const salesData = await Order.aggregate([
         {
             $group: {
                 _id: null,//groups all documents
@@ -64,7 +66,7 @@ export const getDailySalesData = async (startDate, endDate) => {
     // ]
 
     const dateArray = getDatesInRange(startDate, endDate);
-    console.log(dateArray);
+    
 
     return dateArray.map(date => {
         const foundData = dailySalesData.find(item => item._id === date);
