@@ -64,7 +64,7 @@ const AnalyticsTab = () => {
 				/>
 			</div>
 			<motion.div
-				className='bg-gray-800/60 rounded-lg p-6 shadow-lg'
+				className='bg-red-900/20 rounded-lg p-6 shadow-lg'
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5, delay: 0.25 }}
@@ -115,7 +115,7 @@ const AnalyticsCard = ({ title, value, icon: Icon, color }) => (
 			</div>
 		</div>
 		<div className='absolute inset-0 bg-gradient-to-br from-red-600 to-red-900 opacity-30' />
-		<div className='absolute -bottom-4 -right-4 text-red-800 opacity-50'>
+		<div className='absolute -bottom-4 -right-4 text-red-500 opacity-50'>
 			<Icon className='h-32 w-32' />
 		</div>
 	</motion.div>

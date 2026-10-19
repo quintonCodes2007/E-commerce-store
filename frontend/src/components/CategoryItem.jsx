@@ -16,7 +16,7 @@ const CategoryItem = ({category}) => {
                 />
                 <div className='absolute bottom-0 left-0 right-0 p-4 z-20'>
                     <h3 className='text-2xl font-bold text-white mb-2'>{category.name}</h3>
-                    <p className='text-gray-200 text-sm'>Explore {category.name} collection</p>
+                    <p className='text-gray-200 text-sm'>Explore our {category.name} collection</p>
                 </div>       
             </div>        
         </Link>
