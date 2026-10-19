@@ -16,7 +16,7 @@ export const getAnalyticsData = async () => {
         }
     ]);
 
-    const { totalSales, totalRevenue } = salesData[0] || {totlaSales:0, totalRevenue:0};
+    const { totalSales, totalRevenue } = salesData[0] || {totalSales:0, totalRevenue:0};
 
     return {
         users: totalUsers,
@@ -88,7 +88,7 @@ function getDatesInRange(startDate, endDate) {
 
     while (currentDate <= endDate) {
         dates.push(currentDate.toISOString().split('T')[0]);
-        currentDate.setDate(currentDate.getDate() + 1);
+        currentDate.setUTCDate(currentDate.getUTCDate() + 1);
     }
     return dates;
 }

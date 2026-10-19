@@ -9,9 +9,11 @@ router.get("/", protectRoute, adminRoute, async (req,res) => {
         const analyticsData = await getAnalyticsData();
 
         const endDate = new Date();
-        const startDate = new Date(endDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const startDate = new Date(endDate);
+        startDate.setUTCHours(0, 0, 0, 0);
+        startDate.setUTCDate(startDate.getUTCDate() - 6);
 
-        const dailySalesData = getDailySalesData(startDate, endDate);
+        const dailySalesData = await getDailySalesData(startDate, endDate);
 
         res.json({
             analyticsData,
